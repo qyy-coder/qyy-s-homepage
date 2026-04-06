@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>qyy | Personal Homepage</title>
+  <meta name="description" content="qyy - Vibe Coding 学习者 | AI 爱好者。用自然语言和 AI 一起创造有趣的东西。" />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    // Tailwind: enable class-based dark mode
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          boxShadow: {
+            glow: '0 0 0 1px rgba(99,102,241,.25), 0 20px 60px rgba(59,130,246,.12)',
+          },
+          keyframes: {
+            floaty: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+          },
+          animation: {
+            floaty: 'floaty 6s ease-in-out infinite',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* Smooth scrolling */
+    html { scroll-behavior: smooth; }
+
+    /* Subtle grid background */
+    .grid-bg {
+      background-image:
+        radial-gradient(circle at 1px 1px, rgba(99,102,241,.18) 1px, transparent 0);
+      background-size: 22px 22px;
+    }
+
+    /* Soft gradient border */
+    .gradient-border {
+      position: relative;
+      border-radius: 1rem;
+    }
+    .gradient-border::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(59,130,246,.55), rgba(168,85,247,.55), rgba(34,211,238,.35));
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .animate-floaty { animation: none !important; }
+      .transition, .transition-all { transition: none !important; }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-slate-100 selection:bg-indigo-500/30 selection:text-white dark:bg-slate-950 dark:text-slate-100 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900">
+  <!-- ====== Top Background Glow ====== -->
+  <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div class="absolute -top-40 left-1/2 h-[520px] w-[880px] -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-500/20 via-indigo-500/18 to-fuchsia-500/20 blur-3xl"></div>
+    <div class="absolute top-[25%] right-[-10%] h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-3xl"></div>
+    <div class="absolute bottom-[-20%] left-[-10%] h-[520px] w-[520px] rounded-full bg-fuchsia-500/10 blur-3xl"></div>
+  </div>
+
+  <!-- ====== Navbar ====== -->
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/60 backdrop-blur supports-[backdrop-filter]:bg-slate-950/40">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+      <!-- Brand -->
+      <a href="#top" class="group inline-flex items-center gap-2">
+        <span class="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 shadow-glow">
+          <span class="h-4 w-4 rounded-md bg-gradient-to-br from-blue-400 via-indigo-400 to-fuchsia-400"></span>
+        </span>
+        <span class="text-sm font-semibold tracking-wide text-slate-100">
+          qyy<span class="text-slate-400">.home</span>
+        </span>
+        <span class="ml-2 hidden rounded-full bg-gradient-to-r from-blue-500/15 via-indigo-500/15 to-fuchsia-500/15 px-2 py-0.5 text-xs text-slate-200 ring-1 ring-white/10 sm:inline">
+          Vibe · Tech · Clean
+        </span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden items-center gap-1 md:flex">
+        <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#about">About</a>
+        <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#skills">Skills</a>
+        <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#projects">Projects</a>
+        <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#contact">Contact</a>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Theme toggle -->
+        <button id="themeToggle"
+          class="group inline-flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2 text-sm text-slate-200 ring-1 ring-white/10 transition hover:bg-white/10 hover:text-white"
+          type="button" aria-label="切换深色/浅色">
+          <span id="themeIcon" class="inline-flex h-5 w-5 items-center justify-center">
+            <!-- icon injected by JS -->
+          </span>
+          <span class="hidden sm:inline" id="themeLabel">Dark</span>
+        </button>
+
+        <!-- Mobile menu button -->
+        <button id="menuBtn"
+          class="inline-flex items-center justify-center rounded-xl bg-white/5 p-2 ring-1 ring-white/10 transition hover:bg-white/10 md:hidden"
+          type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobileMenu">
+          <svg class="h-5 w-5 text-slate-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden border-t border-white/10 bg-slate-950/70 backdrop-blur md:hidden">
+      <div class="mx-auto max-w-6xl px-4 py-3 sm:px-6">
+        <div class="grid gap-1">
+          <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#about" data-close-menu>About</a>
+          <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#skills" data-close-menu>Skills</a>
+          <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#projects" data-close-menu>Projects</a>
+          <a class="rounded-lg px-3 py-2 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white" href="#contact" data-close-menu>Contact</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ====== Hero ====== -->
+    <section class="relative">
+      <div class="grid-bg">
+        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
+          <div class="grid items-center gap-10 lg:grid-cols-12">
+            <!-- Left -->
+            <div class="lg:col-span-7">
+              <div class="inline-flex items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300 ring-1 ring-white/10">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                可用自然语言快速构建 · 未来感 UI
+              </div>
+
+              <h1 class="mt-5 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
+                qyy
+                <span class="block bg-gradient-to-r from-blue-400 via-indigo-400 to-fuchsia-400 bg-clip-text text-transparent">
+                  Vibe Coding
+                </span>
+              </h1>
+
+              <p class="mt-4 text-lg text-slate-300 sm:text-xl">
+                <span class="text-slate-100/90">Vibe Coding 学习者</span> <span class="text-slate-500">|</span>
+                <span class="text-slate-100/90">AI 爱好者</span>
+              </p>
+
+              <p class="mt-4 max-w-2xl text-slate-300">
+                用自然语言和 AI 一起创造有趣的东西。
+                <span class="text-slate-400">保持简洁、干净、专业，但不失沉浸式科技感。</span>
+              </p>
+
+              <!-- CTAs -->
+              <div class="mt-7 flex flex-wrap items-center gap-3">
+                <a href="#projects"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-fuchsia-500 px-5 py-3 text-sm font-medium text-white shadow-glow transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-indigo-400/50">
+                  查看 Projects
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M5 12h14M13 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+
+                <a href="#contact"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-white/5 px-5 py-3 text-sm font-medium text-slate-200 ring-1 ring-white/10 transition hover:bg-white/10 hover:text-white">
+                  联系我
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 4h16v16H4z"></path>
+                    <path d="M22 6l-10 7L2 6"></path>
+                  </svg>
+                </a>
+              </div>
+
+              <!-- Social icons -->
+              <div class="mt-8 flex items-center gap-3">
+                <!-- GitHub -->
+                <a class="group inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 transition hover:bg-white/10"
+                   href="https://github.com/" target="_blank" rel="noreferrer" aria-label="GitHub">
+                  <svg class="h-5 w-5 text-slate-200 transition group-hover:text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 .5C5.73.5.5 5.86.5 12.36c0 5.2 3.44 9.61 8.2 11.17.6.11.82-.27.82-.58v-2.2c-3.34.75-4.04-1.67-4.04-1.67-.54-1.42-1.32-1.8-1.32-1.8-1.08-.77.08-.75.08-.75 1.2.09 1.83 1.27 1.83 1.27 1.06 1.88 2.78 1.34 3.46 1.03.11-.8.41-1.34.75-1.65-2.66-.31-5.47-1.38-5.47-6.13 0-1.35.46-2.45 1.23-3.31-.12-.31-.53-1.58.12-3.3 0 0 1-.33 3.3 1.27a11.1 11.1 0 0 1 3-.42c1.02 0 2.04.15 3 .42 2.3-1.6 3.3-1.27 3.3-1.27.65 1.72.24 2.99.12 3.3.77.86 1.23 1.96 1.23 3.31 0 4.77-2.82 5.82-5.5 6.13.43.38.82 1.14.82 2.3v3.4c0 .31.22.69.83.58 4.75-1.56 8.18-5.97 8.18-11.17C23.5 5.86 18.27.5 12 .5z"/>
+                  </svg>
+                </a>
+
+                <!-- X -->
+                <a class="group inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 transition hover:bg-white/10"
+                   href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X">
+                  <svg class="h-5 w-5 text-slate-200 transition group-hover:text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.5l-5.1-6.6L5.8 22H2.6l7.3-8.4L1 2h6.7l4.6 6L18.9 2zm-1.1 18h1.7L6.8 3.9H5L17.8 20z"/>
+                  </svg>
+                </a>
+
+                <!-- LinkedIn -->
+                <a class="group inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 ring-1 ring-white/10 transition hover:bg-white/10"
+                   href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                  <svg class="h-5 w-5 text-slate-200 transition group-hover:text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M20.45 20.45H16.9v-5.6c0-1.34-.03-3.06-1.86-3.06-1.86 0-2.14 1.45-2.14 2.96v5.7H9.35V9h3.4v1.56h.05c.47-.9 1.62-1.86 3.33-1.86 3.56 0 4.21 2.34 4.21 5.38v6.37zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.11 20.45H3.56V9h3.55v11.45z"/>
+                  </svg>
+                </a>
+
+                <span class="ml-2 text-xs text-slate-400">（可替换为你的真实链接）</span>
+              </div>
+            </div>
+
+            <!-- Right: “card” -->
+            <div class="lg:col-span-5">
+              <div class="gradient-border bg-slate-900/30 p-6 ring-1 ring-white/10 shadow-glow">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-sm font-medium text-slate-200">Now Building</p>
+                    <p class="mt-1 text-sm text-slate-400">自然语言 × AI 的创作流</p>
+                  </div>
+                  <span class="inline-flex rounded-full bg-gradient-to-r from-blue-500/15 to-fuchsia-500/15 px-3 py-1 text-xs text-slate-200 ring-1 ring-white/10">
+                    2026
+                  </span>
+                </div>
+
+                <div class="mt-6 grid gap-3">
+                  <div class="rounded-xl bg-white/5 p-4 ring-1 ring-white/10 transition hover:bg-white/10">
+                    <p class="text-sm text-slate-200">Focus</p>
+                    <p class="mt-1 text-sm text-slate-400">Vibe Coding / Prompting / UI 设计系统</p>
+                  </div>
+                  <div class="rounded-xl bg-white/5 p-4 ring-1 ring-white/10 transition hover:bg-white/10">
+                    <p class="text-sm text-slate-200">Principles</p>
+                    <p class="mt-1 text-sm text-slate-400">简洁、可读、响应式、细节动效</p>
+                  </div>
+                  <div class="rounded-xl bg-white/5 p-4 ring-1 ring-white/10 transition hover:bg-white/10">
+                    <p class="text-sm text-slate-200">Stack</p>
+                    <p class="mt-1 text-sm text-slate-400">HTML / Tailwind / JS · 以及你喜欢的框架</p>
+                  </div>
+                </div>
+
+                <div class="mt-6 flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-xs text-slate-400">
+                    <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                    Available for collab
+                  </div>
+                  <div class="text-xs text-slate-500">
+                    <span class="bg-gradient-to-r from-blue-400 to-fuchsia-400 bg-clip-text text-transparent">immersive</span> UI
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 flex justify-end">
+                <div class="animate-floaty rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-fuchsia-500/10 px-4 py-2 text-xs text-slate-300 ring-1 ring-white/10">
+                  hover、发光、微交互 —— 让页面更“活”
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== About ====== -->
+    <section id="about" class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-semibold text-white">About Me</h2>
+          <p class="mt-2 text-sm text-slate-400">一点点介绍，更多留在作品里。</p>
+        </div>
+        <div class="hidden sm:block text-xs text-slate-500">/about</div>
+      </div>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <div class="gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10">
+            <p class="text-slate-200 leading-relaxed">
+              我是 <span class="font-semibold text-white">qyy</span>，
+              一名 <span class="text-slate-100/90">Vibe Coding 学习者</span> 与 <span class="text-slate-100/90">AI 爱好者</span>。
+              我喜欢把“想法”用最短路径落地成可用的页面与产品原型：用自然语言描述需求，让 AI 协助生成结构、样式与交互，
+              然后再用设计思维打磨细节与体验。
+            </p>
+            <p class="mt-4 text-slate-300 leading-relaxed">
+              我追求的风格是：<span class="text-slate-100/90">干净、未来感、沉浸式科技氛围</span>。
+              不炫技，但每个 hover、每次滚动、每个层级都要“刚刚好”。
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10">
+            <p class="text-sm font-medium text-slate-200">Quick Facts</p>
+            <ul class="mt-4 space-y-3 text-sm text-slate-300">
+              <li class="flex items-center gap-3">
+                <span class="h-8 w-8 rounded-xl bg-white/5 ring-1 ring-white/10 grid place-items-center">
+                  <span class="h-2 w-2 rounded-full bg-blue-400"></span>
+                </span>
+                偏好深色科技风 + 蓝紫渐变 accent
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="h-8 w-8 rounded-xl bg-white/5 ring-1 ring-white/10 grid place-items-center">
+                  <span class="h-2 w-2 rounded-full bg-fuchsia-400"></span>
+                </span>
+                喜欢把交互做到“轻但有质感”
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="h-8 w-8 rounded-xl bg-white/5 ring-1 ring-white/10 grid place-items-center">
+                  <span class="h-2 w-2 rounded-full bg-cyan-300"></span>
+                </span>
+                擅长快速原型 + 持续迭代
+              </li>
+            </ul>
+
+            <div class="mt-6">
+              <a href="#contact"
+                 class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white/5 px-4 py-3 text-sm font-medium text-slate-200 ring-1 ring-white/10 transition hover:bg-white/10 hover:text-white">
+                现在就联系
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M5 12h14M13 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Skills ====== -->
+    <section id="skills" class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-semibold text-white">Skills</h2>
+          <p class="mt-2 text-sm text-slate-400">彩色标签云，轻量但信息密度高。</p>
+        </div>
+        <div class="hidden sm:block text-xs text-slate-500">/skills</div>
+      </div>
+
+      <div class="mt-6 gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10">
+        <div class="flex flex-wrap gap-3">
+          <!-- Tip: replace/add your real skills -->
+          <span class="rounded-full bg-blue-500/15 px-4 py-2 text-sm text-blue-200 ring-1 ring-blue-400/20 hover:bg-blue-500/20 transition">HTML</span>
+          <span class="rounded-full bg-indigo-500/15 px-4 py-2 text-sm text-indigo-200 ring-1 ring-indigo-400/20 hover:bg-indigo-500/20 transition">Tailwind CSS</span>
+          <span class="rounded-full bg-fuchsia-500/15 px-4 py-2 text-sm text-fuchsia-200 ring-1 ring-fuchsia-400/20 hover:bg-fuchsia-500/20 transition">Modern UI</span>
+          <span class="rounded-full bg-cyan-500/15 px-4 py-2 text-sm text-cyan-200 ring-1 ring-cyan-400/20 hover:bg-cyan-500/20 transition">Responsive Design</span>
+          <span class="rounded-full bg-emerald-500/15 px-4 py-2 text-sm text-emerald-200 ring-1 ring-emerald-400/20 hover:bg-emerald-500/20 transition">UX Thinking</span>
+          <span class="rounded-full bg-sky-500/15 px-4 py-2 text-sm text-sky-200 ring-1 ring-sky-400/20 hover:bg-sky-500/20 transition">Animation / Micro-interactions</span>
+          <span class="rounded-full bg-violet-500/15 px-4 py-2 text-sm text-violet-200 ring-1 ring-violet-400/20 hover:bg-violet-500/20 transition">Design Systems</span>
+          <span class="rounded-full bg-rose-500/15 px-4 py-2 text-sm text-rose-200 ring-1 ring-rose-400/20 hover:bg-rose-500/20 transition">Prototyping</span>
+          <span class="rounded-full bg-amber-500/15 px-4 py-2 text-sm text-amber-200 ring-1 ring-amber-400/20 hover:bg-amber-500/20 transition">Prompt Engineering</span>
+          <span class="rounded-full bg-teal-500/15 px-4 py-2 text-sm text-teal-200 ring-1 ring-teal-400/20 hover:bg-teal-500/20 transition">AI Tools</span>
+          <span class="rounded-full bg-slate-500/15 px-4 py-2 text-sm text-slate-200 ring-1 ring-slate-400/20 hover:bg-slate-500/20 transition">Clean Code</span>
+          <span class="rounded-full bg-purple-500/15 px-4 py-2 text-sm text-purple-200 ring-1 ring-purple-400/20 hover:bg-purple-500/20 transition">JavaScript</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Projects ====== -->
+    <section id="projects" class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-semibold text-white">Projects</h2>
+          <p class="mt-2 text-sm text-slate-400">3–4 个项目卡片，支持 hover 发光与上浮。</p>
+        </div>
+        <div class="hidden sm:block text-xs text-slate-500">/projects</div>
+      </div>
+
+      <div class="mt-6 grid gap-6 md:grid-cols-2">
+        <!-- Card 1 -->
+        <article class="group gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10 transition hover:bg-slate-900/35 hover:-translate-y-1 hover:shadow-glow">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-lg font-semibold text-white">Neon Notes</h3>
+              <p class="mt-1 text-sm text-slate-400">沉浸式深色笔记 UI 原型（占位项目）</p>
+            </div>
+            <span class="rounded-full bg-blue-500/15 px-3 py-1 text-xs text-blue-200 ring-1 ring-blue-400/20">UI</span>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-slate-300">
+            重点在层级、对比度、hover 反馈与细节质感，适合做作品集展示页。
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Tailwind</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Design</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Dark</span>
+          </div>
+          <div class="mt-6 flex items-center justify-between">
+            <a href="#" class="inline-flex items-center gap-2 text-sm text-slate-200 transition group-hover:text-white">
+              预览
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M14 3h7v7"></path>
+                <path d="M10 14L21 3"></path>
+                <path d="M21 14v7H3V3h7"></path>
+              </svg>
+            </a>
+            <span class="text-xs text-slate-500">2026</span>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="group gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10 transition hover:bg-slate-900/35 hover:-translate-y-1 hover:shadow-glow">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-lg font-semibold text-white">Prompt-to-Page</h3>
+              <p class="mt-1 text-sm text-slate-400">自然语言生成落地页的工作流（占位项目）</p>
+            </div>
+            <span class="rounded-full bg-fuchsia-500/15 px-3 py-1 text-xs text-fuchsia-200 ring-1 ring-fuchsia-400/20">AI</span>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-slate-300">
+            通过模板 + 约束提示词，输出一致的 UI 结构和可维护的组件风格。
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Prompt</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Workflow</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Rapid</span>
+          </div>
+          <div class="mt-6 flex items-center justify-between">
+            <a href="#" class="inline-flex items-center gap-2 text-sm text-slate-200 transition group-hover:text-white">
+              预览
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M14 3h7v7"></path>
+                <path d="M10 14L21 3"></path>
+                <path d="M21 14v7H3V3h7"></path>
+              </svg>
+            </a>
+            <span class="text-xs text-slate-500">2026</span>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="group gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10 transition hover:bg-slate-900/35 hover:-translate-y-1 hover:shadow-glow">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-lg font-semibold text-white">Aurora Dashboard</h3>
+              <p class="mt-1 text-sm text-slate-400">未来感数据面板布局（占位项目）</p>
+            </div>
+            <span class="rounded-full bg-cyan-500/15 px-3 py-1 text-xs text-cyan-200 ring-1 ring-cyan-400/20">Web</span>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-slate-300">
+            强调信息层级与可视化容器风格，适用于产品后台/控制台。
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Layout</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Components</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">UX</span>
+          </div>
+          <div class="mt-6 flex items-center justify-between">
+            <a href="#" class="inline-flex items-center gap-2 text-sm text-slate-200 transition group-hover:text-white">
+              预览
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M14 3h7v7"></path>
+                <path d="M10 14L21 3"></path>
+                <path d="M21 14v7H3V3h7"></path>
+              </svg>
+            </a>
+            <span class="text-xs text-slate-500">2026</span>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="group gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10 transition hover:bg-slate-900/35 hover:-translate-y-1 hover:shadow-glow">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="text-lg font-semibold text-white">Micro Motion Kit</h3>
+              <p class="mt-1 text-sm text-slate-400">一组可复用的微交互模式（占位项目）</p>
+            </div>
+            <span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs text-emerald-200 ring-1 ring-emerald-400/20">Motion</span>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-slate-300">
+            统一 hover、focus、进入动画的节奏，让页面轻盈且高级。
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Interaction</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Accessibility</span>
+            <span class="rounded-lg bg-white/5 px-2.5 py-1 text-xs text-slate-300 ring-1 ring-white/10">Polish</span>
+          </div>
+          <div class="mt-6 flex items-center justify-between">
+            <a href="#" class="inline-flex items-center gap-2 text-sm text-slate-200 transition group-hover:text-white">
+              预览
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M14 3h7v7"></path>
+                <path d="M10 14L21 3"></path>
+                <path d="M21 14v7H3V3h7"></path>
+              </svg>
+            </a>
+            <span class="text-xs text-slate-500">2026</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ====== Contact ====== -->
+    <section id="contact" class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-semibold text-white">Contact</h2>
+          <p class="mt-2 text-sm text-slate-400">一个邮件链接 + 简单成功提示（无需后端）。</p>
+        </div>
+        <div class="hidden sm:block text-xs text-slate-500">/contact</div>
+      </div>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <div class="gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10">
+            <p class="text-sm font-medium text-slate-200">Email</p>
+            <p class="mt-2 text-sm text-slate-300">
+              你可以直接邮件联系我（把下面地址改成你的真实邮箱）。
+            </p>
+
+            <a id="emailLink"
+               href="mailto:qyy@example.com?subject=Hello%20qyy&body=Hi%20qyy%2C%0A%0A"
+               class="mt-4 inline-flex w-full items-center justify-between gap-3 rounded-xl bg-white/5 px-4 py-3 text-sm text-slate-200 ring-1 ring-white/10 transition hover:bg-white/10">
+              <span class="truncate">qyy@example.com</span>
+              <span class="inline-flex items-center gap-2 text-xs text-slate-400">
+                mailto
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M14 3h7v7"></path>
+                  <path d="M10 14L21 3"></path>
+                  <path d="M21 14v7H3V3h7"></path>
+                </svg>
+              </span>
+            </a>
+
+            <p class="mt-4 text-xs text-slate-500">
+              也可以把这块替换成你的表单服务（如 Formspree / EmailJS）。
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="gradient-border bg-slate-900/25 p-6 ring-1 ring-white/10">
+            <p class="text-sm font-medium text-slate-200">Quick Message</p>
+            <p class="mt-2 text-sm text-slate-400">本地提示用，不会真实发送。</p>
+
+            <form id="contactForm" class="mt-5 grid gap-4 sm:grid-cols-2" autocomplete="on">
+              <label class="grid gap-2">
+                <span class="text-xs text-slate-400">Name</span>
+                <input required name="name" type="text" placeholder="你的名字"
+                  class="rounded-xl bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 ring-1 ring-white/10 outline-none transition focus:ring-2 focus:ring-indigo-400/40" />
+              </label>
+
+              <label class="grid gap-2">
+                <span class="text-xs text-slate-400">Email</span>
+                <input required name="email" type="email" placeholder="you@email.com"
+                  class="rounded-xl bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 ring-1 ring-white/10 outline-none transition focus:ring-2 focus:ring-indigo-400/40" />
+              </label>
+
+              <label class="grid gap-2 sm:col-span-2">
+                <span class="text-xs text-slate-400">Message</span>
+                <textarea required name="message" rows="4" placeholder="想聊点什么？"
+                  class="rounded-xl bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 ring-1 ring-white/10 outline-none transition focus:ring-2 focus:ring-indigo-400/40"></textarea>
+              </label>
+
+              <div class="flex flex-wrap items-center justify-between gap-3 sm:col-span-2">
+                <button type="submit"
+                  class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-fuchsia-500 px-5 py-3 text-sm font-medium text-white shadow-glow transition hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-indigo-400/50">
+                  发送（提示）
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M22 2L11 13"></path>
+                    <path d="M22 2l-7 20-4-9-9-4z"></path>
+                  </svg>
+                </button>
+
+                <span class="text-xs text-slate-500">
+                  点击邮件也可直接打开客户端
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== Footer ====== -->
+    <footer class="border-t border-white/10">
+      <div class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-10 text-sm text-slate-400 sm:px-6 sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          © <span id="year"></span> <span class="text-slate-200">qyy</span>. Built with
+          <span class="bg-gradient-to-r from-blue-400 to-fuchsia-400 bg-clip-text text-transparent">Tailwind</span>.
+        </p>
+        <a href="#top" class="inline-flex items-center gap-2 text-slate-300 transition hover:text-white">
+          Back to top
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M12 19V5"></path>
+            <path d="M5 12l7-7 7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ====== Toast (success hint) ====== -->
+  <div id="toast"
+       class="pointer-events-none fixed bottom-5 left-1/2 z-50 hidden w-[92%] max-w-md -translate-x-1/2 rounded-2xl bg-slate-950/70 p-4 text-sm text-slate-100 ring-1 ring-white/10 backdrop-blur">
+    <div class="flex items-start gap-3">
+      <div class="mt-0.5 h-8 w-8 shrink-0 rounded-xl bg-emerald-500/15 ring-1 ring-emerald-400/20 grid place-items-center">
+        <svg class="h-4 w-4 text-emerald-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M20 6L9 17l-5-5"></path>
+        </svg>
+      </div>
+      <div class="min-w-0">
+        <p class="font-medium text-slate-100">已收到！</p>
+        <p class="mt-1 text-slate-300">这是一个前端提示示例，你可以接入真实表单服务。</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== Helpers ======
+    const $ = (sel) => document.querySelector(sel);
+
+    // ====== Footer year ======
+    $('#year').textContent = new Date().getFullYear();
+
+    // ====== Mobile menu ======
+    const menuBtn = $('#menuBtn');
+    const mobileMenu = $('#mobileMenu');
+
+    function setMenuOpen(open) {
+      mobileMenu.classList.toggle('hidden', !open);
+      menuBtn.setAttribute('aria-expanded', String(open));
+    }
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
+      setMenuOpen(!isOpen);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu || mobileMenu.classList.contains('hidden')) return;
+      const withinMenu = mobileMenu.contains(e.target);
+      const withinBtn = menuBtn.contains(e.target);
+      if (!withinMenu && !withinBtn) setMenuOpen(false);
+    });
+
+    document.querySelectorAll('[data-close-menu]').forEach(a => {
+      a.addEventListener('click', () => setMenuOpen(false));
+    });
+
+    // ====== Theme toggle (dark/light) ======
+    const themeToggle = $('#themeToggle');
+    const themeLabel = $('#themeLabel');
+    const themeIcon = $('#themeIcon');
+
+    const ICON_SUN = `
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"></path>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+      </svg>
+    `;
+    const ICON_MOON = `
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M21 12.6A8.4 8.4 0 1 1 11.4 3a6.4 6.4 0 0 0 9.6 9.6z"></path>
+      </svg>
+    `;
+
+    function applyTheme(mode) {
+      const root = document.documentElement;
+      const isDark = mode === 'dark';
+      root.classList.toggle('dark', isDark);
+
+      // Base backgrounds/text for light mode
+      document.body.classList.toggle('bg-slate-950', isDark);
+      document.body.classList.toggle('text-slate-100', isDark);
+
+      // If light: keep a clean “tech light”
+      if (!isDark) {
+        document.body.classList.add('bg-white', 'text-slate-900');
+        document.body.classList.remove('bg-gradient-to-b', 'from-slate-950', 'via-slate-950', 'to-slate-900');
+      } else {
+        document.body.classList.remove('bg-white', 'text-slate-900');
+        document.body.classList.add('bg-gradient-to-b', 'from-slate-950', 'via-slate-950', 'to-slate-900');
+      }
+
+      themeLabel.textContent = isDark ? 'Dark' : 'Light';
+      themeIcon.innerHTML = isDark ? ICON_MOON : ICON_SUN;
+
+      localStorage.setItem('theme', mode);
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    });
+
+    // ====== Contact form toast ======
+    const toast = $('#toast');
+    const contactForm = $('#contactForm');
+
+    function showToast() {
+      toast.classList.remove('hidden');
+      toast.classList.add('opacity-100');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2400);
+    }
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast();
+      contactForm.reset();
+    });
+  </script>
+</body>
+</html>
